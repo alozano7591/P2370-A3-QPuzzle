@@ -13,9 +13,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ALozanoQGame
 {
+
+
 
     /// <summary>
     /// A GridBlock is a PictureBox object used for desigining the game and eventually the actual gameplay. 
@@ -32,11 +35,17 @@ namespace ALozanoQGame
         //the enum for this specific block
         private GridBlockType blockType = GridBlockType.None;
 
+        public int BlockSize { get; set; } = 50;
+
         //Properties used to track the exact row and column of this GridBlock object
         public int RowNum { get; set; }
         public int ColNum { get; set; }
 
-        private DesignerForm owner;
+        //list that stores the images that will be used for grid boxes
+        private List<Bitmap> blockImages = new List<Bitmap>();
+
+        //the form that owns this block
+        private Form owner;
 
         /// <summary>
         /// GridBlock constructor. Called when object created.
@@ -45,19 +54,44 @@ namespace ALozanoQGame
         /// <param name="size">The size of the button. Size is used for both length and width.</param>
         /// <param name="row">The row number of the column</param>
         /// <param name="col">The column number of the grid block</param>
-        public GridBlock(DesignerForm form, int size, int row, int col)
+        public GridBlock(Form form, int size, int row, int col)
         {
             this.owner = form;
-            this.Width = size;
-            this.Height = size;
+            BlockSize = size;
+            this.Width = BlockSize;
+            this.Height = BlockSize;
             this.RowNum = row;
             this.ColNum = col;
             this.BorderStyle = BorderStyle.FixedSingle;
             this.SizeMode = PictureBoxSizeMode.StretchImage;
+
+            
         }
+
+        public GridBlock(Form owner, int blockSize, int rowNum, int colNum, int blockTypeNum)
+        {
+            this.owner = owner;
+            
+            //set our block size
+            BlockSize = blockSize;
+            this.Width = BlockSize;
+            this.Height = BlockSize;
+
+            RowNum = rowNum;
+            ColNum = colNum;
+
+            SetBlockType(blockTypeNum);
+
+            this.BorderStyle = BorderStyle.FixedSingle;
+            this.SizeMode = PictureBoxSizeMode.StretchImage;
+        }
+
+
+
 
         /// <summary>
         /// Sets the block type by changing the image and setting it to a new enum using the given int.
+        /// Available for custom setting of images
         /// </summary>
         /// <param name="bitmapIMG">The image to change the block to.</param>
         /// <param name="blockNum">A number corresponding to the enum block types</param>
@@ -66,6 +100,41 @@ namespace ALozanoQGame
             this.Image = bitmapIMG;
 
             blockType = (GridBlockType)blockNum;
+        }
+
+        /// <summary>
+        /// Set block type only using a number. This will have block set image on its own using default images
+        /// </summary>
+        /// <param name="blockNum"></param>
+        public void SetBlockType(int blockNum)
+        {
+
+            this.blockType = (GridBlockType)blockNum;
+
+            switch (blockType)
+            {
+                case GridBlockType.None:
+
+                    break;
+                case GridBlockType.Wall:
+                    Image = Properties.Resources.WallBlock;
+                    break;
+                case GridBlockType.RedDoor:
+                    Image = Properties.Resources.RedDoor;
+                    break;
+                case GridBlockType.GreenDoor:
+                    Image = Properties.Resources.GreenDoor;
+                    break;
+                case GridBlockType.RedBox:
+                    Image = Properties.Resources.RedBox;
+                    break;
+                case GridBlockType.GreenBox:
+                    Image = Properties.Resources.GreenBox;
+                    break;
+                default:
+                    break;
+            }
+
         }
 
         /// <summary>

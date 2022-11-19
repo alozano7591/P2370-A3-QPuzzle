@@ -117,7 +117,6 @@ namespace ALozanoQGame
                         this.Size = new Size(gridBlocks[gridBlocks.Count - 1].Right + gridBlocks[gridBlocks.Count - 1].Size.Width, this.Size.Height);
                     }
 
-
                     //If we've gotten this far then the creation of the grid is probably successul 
                     //save our rows and columns to our global values for later use
                     Rows = rows;

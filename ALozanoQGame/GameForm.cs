@@ -14,10 +14,20 @@ namespace ALozanoQGame
     public partial class GameForm : Form
     {
 
+        //The starting x position of the grid
+        public const int START_X = 40;
+        //The starting y position of the grid
+        public const int START_Y = 60;
+        //the value that will be used for length and width of our gridboxes
+        public const int BLOCK_SIZE = 50;
+
         private int rowNum = 0;
         private int colNum = 0; 
-        private int[,] tileTypes;
+        private GridBlock[,] tileBlocks;
         private string[,] tileDataStrings;
+
+        //list that stores the images that will be used for grid boxes
+        private List<Bitmap> blockImages = new List<Bitmap>();
 
         public GameForm()
         {
@@ -28,7 +38,7 @@ namespace ALozanoQGame
         /// Load our file using the filename given
         /// </summary>
         /// <param name="fileName">This is the name and path of the file to be loaded</param>
-        private void Load(string fileName)
+        private void LoadFile(string fileName)
         {
 
             if (File.Exists(fileName))
@@ -40,6 +50,9 @@ namespace ALozanoQGame
                     int tileTracker = -1;    //counts lines for each tile. This ensures we use the right amount of lines per tile
                     int rowTracker = 0;
                     int colTracker = 0;
+
+                    int posX;                                   //starting x position of the grid
+                    int posY;                                   //starting y position of the grid
 
                     int tileCount = 0;
                     string ln;
@@ -62,6 +75,7 @@ namespace ALozanoQGame
 
                             //we have our row and col data, so start tracking tiles on following lines
                             tileDataStrings = new string[rowNum, colNum];
+                            tileBlocks = new GridBlock[rowNum, colNum];
                             tileTracker = 0;
                         }
                         else
@@ -91,6 +105,17 @@ namespace ALozanoQGame
 
                                     richTextBox1.Text+= "\n" + (tileDataStrings[rowTracker, colTracker]);
 
+                                    GridBlock block = new GridBlock(this, BLOCK_SIZE, rowTracker, colTracker, int.Parse(ln));
+                                    
+                                    block.Left = START_X + (BLOCK_SIZE * rowTracker);
+                                    block.Top = START_Y + (BLOCK_SIZE * colTracker);
+
+                                    this.Controls.Add(block);
+
+                                    //block.Click += new EventHandler(pictureBoxGridBlock_Click);
+
+                                    
+
                                     colTracker++;
 
                                     if (colTracker >= colNum)
@@ -105,9 +130,6 @@ namespace ALozanoQGame
                                         }
                                     }
                                 }
-
-                                
-
                                 
                             }
                         }
@@ -133,7 +155,7 @@ namespace ALozanoQGame
                 case DialogResult.None:
                     break;
                 case DialogResult.OK:
-                    Load(dlgOpen.FileName);
+                    LoadFile(dlgOpen.FileName);
 
                     break;
                 case DialogResult.Cancel:
@@ -151,6 +173,17 @@ namespace ALozanoQGame
                 default:
                     break;
             }
+        }
+
+        private void GameForm_Load(object sender, EventArgs e)
+        {
+            //add images to the list for our grid images
+            blockImages.Add(null);
+            blockImages.Add(Properties.Resources.WallBlock);
+            blockImages.Add(Properties.Resources.RedDoor);
+            blockImages.Add(Properties.Resources.GreenDoor);
+            blockImages.Add(Properties.Resources.RedBox);
+            blockImages.Add(Properties.Resources.GreenBox);
         }
     }
 }

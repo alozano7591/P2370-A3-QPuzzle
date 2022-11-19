@@ -60,14 +60,14 @@
             // loadToolStripMenuItem
             // 
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(125, 26);
             this.loadToolStripMenuItem.Text = "Load";
             this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
             // 
             // quitToolStripMenuItem
             // 
             this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-            this.quitToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.quitToolStripMenuItem.Size = new System.Drawing.Size(125, 26);
             this.quitToolStripMenuItem.Text = "Quit";
             // 
             // dlgOpen
@@ -78,7 +78,7 @@
             // 
             this.richTextBox1.Location = new System.Drawing.Point(294, 96);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(182, 222);
+            this.richTextBox1.Size = new System.Drawing.Size(310, 258);
             this.richTextBox1.TabIndex = 1;
             this.richTextBox1.Text = "";
             // 

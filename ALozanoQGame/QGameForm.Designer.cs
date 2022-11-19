@@ -51,6 +51,7 @@
             this.btnPlay.TabIndex = 1;
             this.btnPlay.Text = "Play";
             this.btnPlay.UseVisualStyleBackColor = true;
+            this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
             // 
             // btnExit
             // 
@@ -66,11 +67,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(614, 383);
+            this.ClientSize = new System.Drawing.Size(543, 383);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.btnPlay);
             this.Controls.Add(this.btnDesign);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "QGameForm";
             this.Text = "QGame";
             this.ResumeLayout(false);

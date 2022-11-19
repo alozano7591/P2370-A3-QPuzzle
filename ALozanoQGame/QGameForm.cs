@@ -55,5 +55,11 @@ namespace ALozanoQGame
 
             designerForm.Show();
         }
+
+        private void btnPlay_Click(object sender, EventArgs e)
+        {
+            GameForm gameForm = new GameForm();
+            gameForm.Show();    
+        }
     }
 }

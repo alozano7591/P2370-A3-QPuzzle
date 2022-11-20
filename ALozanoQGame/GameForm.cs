@@ -156,7 +156,6 @@ namespace ALozanoQGame
                     break;
                 case DialogResult.OK:
                     LoadFile(dlgOpen.FileName);
-
                     break;
                 case DialogResult.Cancel:
                     break;

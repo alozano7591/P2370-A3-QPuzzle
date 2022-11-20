@@ -107,8 +107,8 @@ namespace ALozanoQGame
 
                                     GridBlock block = new GridBlock(this, BLOCK_SIZE, rowTracker, colTracker, int.Parse(ln));
                                     
-                                    block.Left = START_X + (BLOCK_SIZE * rowTracker);
-                                    block.Top = START_Y + (BLOCK_SIZE * colTracker);
+                                    block.Left = START_X + (BLOCK_SIZE * colTracker);
+                                    block.Top = START_Y + (BLOCK_SIZE * rowTracker);
 
                                     this.Controls.Add(block);
 

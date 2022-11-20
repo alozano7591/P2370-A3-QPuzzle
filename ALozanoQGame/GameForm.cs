@@ -31,6 +31,9 @@ namespace ALozanoQGame
 
         private GridBlock selectedBlock;
 
+        private int movesNum = 0;
+        private int remiainingBoxNum = 0;
+
         public GameForm()
         {
             InitializeComponent();
@@ -66,14 +69,11 @@ namespace ALozanoQGame
                         {
                             //for first row make line data rowNum
                             rowNum = int.Parse(ln);
-                            richTextBox1.Text = "rows: " + rowNum;
                         }
                         else if (counter == 1)
                         {
                             //for second row make line data colNum
                             colNum = int.Parse(ln);
-                            richTextBox1.Text += "\ncolumns: " + colNum;
-
 
                             //we have our row and col data, so start tracking tiles on following lines
                             tileDataStrings = new string[rowNum, colNum];
@@ -107,22 +107,26 @@ namespace ALozanoQGame
                                     tileCount++;
                                     tileTracker = 0;
 
-                                    richTextBox1.Text += "\n" + (tileDataStrings[rowTracker, colTracker]);
-
                                     //if our tile is not nothing, then make a block
                                     if (tileType > 0)
                                     {
                                         GridBlock block = new GridBlock(this, BLOCK_SIZE, rowTracker, colTracker, tileType);
 
+                                        tileBlocks[rowTracker, colTracker] = block;
+
                                         block.Left = START_X + (BLOCK_SIZE * colTracker);
                                         block.Top = START_Y + (BLOCK_SIZE * rowTracker);
 
-                                        this.Controls.Add(block);
 
+                                        //this.Controls.Add(block);
+                                        pnlTiles.Controls.Add(block);
+                                         
                                         //if the gridblock that we're adding is a box, then add to event handler
                                         if (tileType == 4 || tileType == 5)
                                         {
                                             block.Click += new EventHandler(box_Click);
+                                            remiainingBoxNum++;
+                                            tbRemainingBoxes.Text = remiainingBoxNum.ToString();
                                         }
                                     }
 
@@ -193,6 +197,132 @@ namespace ALozanoQGame
             blockImages.Add(Properties.Resources.GreenDoor);
             blockImages.Add(Properties.Resources.RedBox);
             blockImages.Add(Properties.Resources.GreenBox);
+        }
+
+        private void buttonMove_Click(object sender, EventArgs e)
+        {
+
+            if(selectedBlock == null)
+            {
+                MessageBox.Show("No box selected", "PUT A STATIC REFERENCE");
+                return;
+            }
+
+            Button btnDir = sender as Button;
+
+            if(btnDir.Name == "btnLeft")
+            {
+                MoveBox(-1, 0);
+            }
+            else if(btnDir.Name == "btnRight")
+            {
+                MoveBox(1, 0);
+            }
+            else if(btnDir.Name == "btnUp")
+            {
+                MoveBox(0, -1);
+            }
+            else if(btnDir.Name == "btnDown")
+            {
+                MoveBox(0, 1);
+            }
+
+        }
+
+        /// <summary>
+        /// Use to move box in a direction. We don't have vectors, so xDir or yDir are used to determine directions.
+        /// Only x or y are intended to have a value, if both have values other than 0 then x is prioritized.
+        /// </summary>
+        /// <param name="xDir">Treat as Vector2.X</param>
+        /// <param name="yDir">Treat as Vector2.Y</param>
+        private void MoveBox(int xDir, int yDir)
+        {
+            int colVal = selectedBlock.ColNum;
+            int rowVal = selectedBlock.RowNum;
+            bool tileClear = true;
+            GridBlock nextBlock;
+            bool moved = false;
+
+            if (xDir != 0)
+            {
+                
+                
+                while(tileClear)
+                {
+
+                    nextBlock = GetTile(rowVal, colVal + xDir);
+
+                    if(nextBlock == null)
+                    {
+                        selectedBlock.Left += BLOCK_SIZE * xDir;
+                        tileBlocks[rowVal, colVal] = null;          //clear previous tileBlock index since we moved box out of its spot
+                        colVal += xDir;
+                        selectedBlock.ColNum = colVal;
+                        tileBlocks[rowVal, colVal] = selectedBlock;
+
+                        moved = true;
+                    }
+                    else
+                    {
+
+                        if (nextBlock.GetBlockTypeNumber() == (selectedBlock.GetBlockTypeNumber() - 2))
+                        {
+                            MessageBox.Show("We have a match");
+                            moved = true;
+                        }
+
+                        tileClear = false;
+                    }
+
+                }
+
+            }
+            else if(yDir != 0)
+            {
+                while (tileClear)
+                {
+
+                    nextBlock = GetTile(rowVal + yDir, colVal);
+
+                    if (nextBlock == null)
+                    {
+                        tileBlocks[rowVal, colVal] = null;          //clear previous tileBlock index since we moved box out of its spot
+                        selectedBlock.Top += BLOCK_SIZE * yDir;
+                        rowVal += yDir;
+                        selectedBlock.RowNum = rowVal;
+                        tileBlocks[rowVal, colVal] = selectedBlock;
+
+                        moved = true;
+                    }
+                    else
+                    {
+
+                        if (nextBlock.GetBlockTypeNumber() == (selectedBlock.GetBlockTypeNumber() - 2))
+                        {
+                            MessageBox.Show("We have a match");
+                            moved = true;
+                        }
+
+                        tileClear = false;
+                    }
+
+                }
+            }
+
+            if(moved)
+            {
+                movesNum++;
+                tbMovesNumber.Text = movesNum.ToString();
+            }
+
+        }
+
+        private GridBlock GetTile(int row, int col)
+        {
+
+            //check the row and column, return the tile if there is one, return null otherwise
+            return tileBlocks[row, col] ==  null? null: tileBlocks[row, col];
+
         }
 
         private void box_Click(object sender, EventArgs e)

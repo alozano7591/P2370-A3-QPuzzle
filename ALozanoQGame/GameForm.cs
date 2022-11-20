@@ -29,6 +29,8 @@ namespace ALozanoQGame
         //list that stores the images that will be used for grid boxes
         private List<Bitmap> blockImages = new List<Bitmap>();
 
+        private GridBlock selectedBlock;
+
         public GameForm()
         {
             InitializeComponent();
@@ -96,6 +98,8 @@ namespace ALozanoQGame
                                 }
                                 else if (tileTracker == 2)
                                 {
+                                    int tileType = int.Parse(ln);
+
                                     tileDataStrings[rowTracker, colTracker] += ", tile type: " + ln;
 
                                     //we have finished this tile, so increment tile count and reset tracker
@@ -103,18 +107,24 @@ namespace ALozanoQGame
                                     tileCount++;
                                     tileTracker = 0;
 
-                                    richTextBox1.Text+= "\n" + (tileDataStrings[rowTracker, colTracker]);
+                                    richTextBox1.Text += "\n" + (tileDataStrings[rowTracker, colTracker]);
 
-                                    GridBlock block = new GridBlock(this, BLOCK_SIZE, rowTracker, colTracker, int.Parse(ln));
-                                    
-                                    block.Left = START_X + (BLOCK_SIZE * colTracker);
-                                    block.Top = START_Y + (BLOCK_SIZE * rowTracker);
+                                    //if our tile is not nothing, then make a block
+                                    if (tileType > 0)
+                                    {
+                                        GridBlock block = new GridBlock(this, BLOCK_SIZE, rowTracker, colTracker, tileType);
 
-                                    this.Controls.Add(block);
+                                        block.Left = START_X + (BLOCK_SIZE * colTracker);
+                                        block.Top = START_Y + (BLOCK_SIZE * rowTracker);
 
-                                    //block.Click += new EventHandler(pictureBoxGridBlock_Click);
+                                        this.Controls.Add(block);
 
-                                    
+                                        //if the gridblock that we're adding is a box, then add to event handler
+                                        if (tileType == 4 || tileType == 5)
+                                        {
+                                            block.Click += new EventHandler(box_Click);
+                                        }
+                                    }
 
                                     colTracker++;
 
@@ -183,6 +193,23 @@ namespace ALozanoQGame
             blockImages.Add(Properties.Resources.GreenDoor);
             blockImages.Add(Properties.Resources.RedBox);
             blockImages.Add(Properties.Resources.GreenBox);
+        }
+
+        private void box_Click(object sender, EventArgs e)
+        {
+
+            GridBlock gridBlock = sender as GridBlock;
+
+
+            MessageBox.Show("You clicked a box!", "Al's QGame");
+
+            //if the block type is box type
+            if(gridBlock.GetBlockTypeNumber() == 4 || gridBlock.GetBlockTypeNumber() == 5)
+            {
+
+                selectedBlock = gridBlock;
+
+            }
         }
     }
 }

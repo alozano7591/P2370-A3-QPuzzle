@@ -147,7 +147,6 @@ namespace ALozanoQGame
                                 
                             }
                         }
-                            
 
                         Console.WriteLine(ln);
                         counter++;

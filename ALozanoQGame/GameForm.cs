@@ -14,6 +14,8 @@ namespace ALozanoQGame
     public partial class GameForm : Form
     {
 
+        private string messageBoxTitle = "Al's QGame";
+
         //The starting x position of the grid
         public const int START_X = 40;
         //The starting y position of the grid
@@ -22,7 +24,7 @@ namespace ALozanoQGame
         public const int BLOCK_SIZE = 50;
 
         private int rowNum = 0;
-        private int colNum = 0; 
+        private int colNum = 0;
         private GridBlock[,] tileBlocks;
         private string[,] tileDataStrings;
 
@@ -64,7 +66,7 @@ namespace ALozanoQGame
 
                     while ((ln = file.ReadLine()) != null)
                     {
-                        
+
                         if (counter == 0)
                         {
                             //for first row make line data rowNum
@@ -120,7 +122,7 @@ namespace ALozanoQGame
 
                                         //this.Controls.Add(block);
                                         pnlTiles.Controls.Add(block);
-                                         
+
                                         //if the gridblock that we're adding is a box, then add to event handler
                                         if (tileType == 4 || tileType == 5)
                                         {
@@ -144,10 +146,9 @@ namespace ALozanoQGame
                                         }
                                     }
                                 }
-                                
+
                             }
                         }
-                            
 
                         Console.WriteLine(ln);
                         counter++;
@@ -188,6 +189,11 @@ namespace ALozanoQGame
             }
         }
 
+        /// <summary>
+        /// Called on form loading
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void GameForm_Load(object sender, EventArgs e)
         {
             //add images to the list for our grid images
@@ -199,10 +205,16 @@ namespace ALozanoQGame
             blockImages.Add(Properties.Resources.GreenBox);
         }
 
+        /// <summary>
+        /// Used to move the selected box left, right, up, or down.
+        /// If no box is selected then show a warning
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonMove_Click(object sender, EventArgs e)
         {
 
-            if(selectedBlock == null)
+            if (selectedBlock == null)
             {
                 MessageBox.Show("No box selected", "PUT A STATIC REFERENCE");
                 return;
@@ -210,21 +222,31 @@ namespace ALozanoQGame
 
             Button btnDir = sender as Button;
 
-            if(btnDir.Name == "btnLeft")
+            if (btnDir.Name == "btnLeft")
             {
                 MoveBox(-1, 0);
             }
-            else if(btnDir.Name == "btnRight")
+            else if (btnDir.Name == "btnRight")
             {
                 MoveBox(1, 0);
             }
-            else if(btnDir.Name == "btnUp")
+            else if (btnDir.Name == "btnUp")
             {
                 MoveBox(0, -1);
             }
-            else if(btnDir.Name == "btnDown")
+            else if (btnDir.Name == "btnDown")
             {
                 MoveBox(0, 1);
+            }
+
+            //if the player has no boxes left, then they have won
+            if(remiainingBoxNum <=0)
+            {
+                MessageBox.Show(
+                    "You Win! \n" +
+                    "Total Moves: " + movesNum, 
+                    messageBoxTitle);
+                ResetGame();
             }
 
         }
@@ -245,14 +267,14 @@ namespace ALozanoQGame
 
             if (xDir != 0)
             {
-                
-                
-                while(tileClear)
+
+
+                while (tileClear)
                 {
 
                     nextBlock = GetTile(rowVal, colVal + xDir);
 
-                    if(nextBlock == null)
+                    if (nextBlock == null)
                     {
                         selectedBlock.Left += BLOCK_SIZE * xDir;
                         tileBlocks[rowVal, colVal] = null;          //clear previous tileBlock index since we moved box out of its spot
@@ -277,7 +299,7 @@ namespace ALozanoQGame
                 }
 
             }
-            else if(yDir != 0)
+            else if (yDir != 0)
             {
                 while (tileClear)
                 {
@@ -299,7 +321,7 @@ namespace ALozanoQGame
 
                         if (nextBlock.GetBlockTypeNumber() == (selectedBlock.GetBlockTypeNumber() - 2))
                         {
-                            MessageBox.Show("We have a match");
+                            InitiateBoxMatchAction(selectedBlock, nextBlock);
                             moved = true;
                         }
 
@@ -309,7 +331,7 @@ namespace ALozanoQGame
                 }
             }
 
-            if(moved)
+            if (moved)
             {
                 movesNum++;
                 tbMovesNumber.Text = movesNum.ToString();
@@ -317,21 +339,56 @@ namespace ALozanoQGame
 
         }
 
+        /// <summary>
+        /// Call to see what tile is at a specific coordinate
+        /// </summary>
+        /// <param name="row">acts as Y coord</param>
+        /// <param name="col">acts as X coord</param>
+        /// <returns></returns>
         private GridBlock GetTile(int row, int col)
         {
 
             //check the row and column, return the tile if there is one, return null otherwise
-            return tileBlocks[row, col] ==  null? null: tileBlocks[row, col];
+            return tileBlocks[row, col] == null ? null : tileBlocks[row, col];
 
         }
 
+        /// <summary>
+        /// Call this method when a box has hit a matching coloured door
+        /// </summary>
+        /// <param name="box">the selected box</param>
+        /// <param name="door">the door that it hit</param>
+        private void InitiateBoxMatchAction(GridBlock box, GridBlock door)
+        {
+            MessageBox.Show("We have a match");
+
+            for(int i =0; i < tileBlocks.GetLength(0); i++)
+            {
+                for(int j=0; j < tileBlocks.GetLength(1); j++)
+                {
+                    if(box == tileBlocks[i, j])
+                    {
+                        //this.Controls.Remove(box);
+                        pnlTiles.Controls.Remove(box);
+                        remiainingBoxNum--;
+                        tbRemainingBoxes.Text = remiainingBoxNum.ToString();
+                    }
+                    
+                }
+            }
+            
+
+        }
+
+        /// <summary>
+        /// Called when a green or red box is clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void box_Click(object sender, EventArgs e)
         {
 
             GridBlock gridBlock = sender as GridBlock;
-
-
-            MessageBox.Show("You clicked a box!", "Al's QGame");
 
             //if the block type is box type
             if(gridBlock.GetBlockTypeNumber() == 4 || gridBlock.GetBlockTypeNumber() == 5)
@@ -342,6 +399,31 @@ namespace ALozanoQGame
             }
         }
 
+        /// <summary>
+        /// Clears board of all the tile bloocks and clears all the txt values
+        /// </summary>
+        private void ResetGame()
+        {
 
+            for (int i = 0; i < tileBlocks.GetLength(0); i++)
+            {
+                for (int j = 0; j < tileBlocks.GetLength(1); j++)
+                {
+
+
+                    pnlTiles.Controls.Remove(tileBlocks[i,j]);
+                    remiainingBoxNum--;
+                    tbRemainingBoxes.Text = remiainingBoxNum.ToString();
+
+                }
+            }
+
+            movesNum = 0;
+            remiainingBoxNum = 0;
+
+            tbMovesNumber.Text = movesNum.ToString();
+            tbRemainingBoxes.Text = remiainingBoxNum.ToString();
+
+        }
     }
 }

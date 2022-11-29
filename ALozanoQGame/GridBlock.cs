@@ -18,8 +18,6 @@ using static System.Net.Mime.MediaTypeNames;
 namespace ALozanoQGame
 {
 
-
-
     /// <summary>
     /// A GridBlock is a PictureBox object used for desigining the game and eventually the actual gameplay. 
     /// Each gridblock also stores their type values and images.

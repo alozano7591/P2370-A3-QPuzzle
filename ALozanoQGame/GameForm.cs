@@ -1,7 +1,7 @@
 ﻿/* Alfredo Lozano
  * 5397591
  * alozano7591@conestogac.on.ca
- * Assignment 2: QGame:
+ * Assignment 3: QGame:
  * This project contains a program that allows users to create puzzle game maps 
  * and save their content.
  */
@@ -19,9 +19,14 @@ using System.Windows.Forms;
 
 namespace ALozanoQGame
 {
+
+    /// <summary>
+    /// Form is responsible for the actual gameplay
+    /// </summary>
     public partial class GameForm : Form
     {
 
+        //this will be on the title of all message boxes
         private string messageBoxTitle = "Al's QGame";
 
         //The starting x position of the grid
@@ -31,19 +36,22 @@ namespace ALozanoQGame
         //the value that will be used for length and width of our gridboxes
         public const int BLOCK_SIZE = 50;
 
-        private int rowNum = 0;
-        private int colNum = 0;
-        private GridBlock[,] tileBlocks;
-        private string[,] tileDataStrings;
+        private int rowNum = 0;                                         //row numbers
+        private int colNum = 0;                                         //used for tracking column number
+        private GridBlock[,] tileBlocks;                                //2D array that tracks all of our blocks
+        private string[,] tileDataStrings;                              //2D array of strings used for assigning values to blocks
 
         //list that stores the images that will be used for grid boxes
         private List<Bitmap> blockImages = new List<Bitmap>();
 
-        private GridBlock selectedBlock;
+        private GridBlock selectedBlock;                                //track our selected box
 
-        private int movesNum = 0;
-        private int remiainingBoxNum = 0;
+        private int movesNum = 0;                                       //track the numeber of moves
+        private int remiainingBoxNum = 0;                               //track the remaining number of boxes
 
+        /// <summary>
+        /// Upon creating of the form initialize the component
+        /// </summary>
         public GameForm()
         {
             InitializeComponent();
@@ -167,6 +175,11 @@ namespace ALozanoQGame
             }
         }
 
+        /// <summary>
+        /// When the menu strip is pressed show options and react to pressed
+        /// </summary>
+        /// <param name="sender">the object thats sending message</param>
+        /// <param name="e">the arguments</param>
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             dlgOpen.Filter = "game file|*.qgame|Text File|*.txt|all files|*.*";
@@ -224,7 +237,7 @@ namespace ALozanoQGame
 
             if (selectedBlock == null)
             {
-                MessageBox.Show("No box selected", "PUT A STATIC REFERENCE");
+                MessageBox.Show("No box selected", messageBoxTitle);
                 return;
             }
 
@@ -297,7 +310,7 @@ namespace ALozanoQGame
 
                         if (nextBlock.GetBlockTypeNumber() == (selectedBlock.GetBlockTypeNumber() - 2))
                         {
-                            MessageBox.Show("We have a match");
+                            MessageBox.Show("We have a match", messageBoxTitle);
                             moved = true;
                         }
 
@@ -368,7 +381,7 @@ namespace ALozanoQGame
         /// <param name="door">the door that it hit</param>
         private void InitiateBoxMatchAction(GridBlock box, GridBlock door)
         {
-            MessageBox.Show("We have a match");
+            MessageBox.Show("We have a match", messageBoxTitle);
 
             for(int i =0; i < tileBlocks.GetLength(0); i++)
             {

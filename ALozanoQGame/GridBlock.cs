@@ -33,6 +33,7 @@ namespace ALozanoQGame
         //the enum for this specific block
         private GridBlockType blockType = GridBlockType.None;
 
+        //used for our size
         public int BlockSize { get; set; } = 50;
 
         //Properties used to track the exact row and column of this GridBlock object
@@ -66,6 +67,14 @@ namespace ALozanoQGame
             
         }
 
+        /// <summary>
+        /// Constructor for grid block that is used for the actual game
+        /// </summary>
+        /// <param name="owner"></param>
+        /// <param name="blockSize"></param>
+        /// <param name="rowNum"></param>
+        /// <param name="colNum"></param>
+        /// <param name="blockTypeNum"></param>
         public GridBlock(Form owner, int blockSize, int rowNum, int colNum, int blockTypeNum)
         {
             this.owner = owner;
@@ -75,11 +84,14 @@ namespace ALozanoQGame
             this.Width = BlockSize;
             this.Height = BlockSize;
 
+            //set row and col numbers
             RowNum = rowNum;
             ColNum = colNum;
 
+            //set up our type
             SetBlockType(blockTypeNum);
 
+            //set up our picture box values
             this.BorderStyle = BorderStyle.FixedSingle;
             this.SizeMode = PictureBoxSizeMode.StretchImage;
         }
@@ -109,6 +121,7 @@ namespace ALozanoQGame
 
             this.blockType = (GridBlockType)blockNum;
 
+            //used for assigning the right type
             switch (blockType)
             {
                 case GridBlockType.None:

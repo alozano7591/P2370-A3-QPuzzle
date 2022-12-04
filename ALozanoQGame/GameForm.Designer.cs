@@ -1,4 +1,12 @@
-﻿namespace ALozanoQGame
+﻿/* Alfredo Lozano
+ * 5397591
+ * alozano7591@conestogac.on.ca
+ * Assignment 2: QGame:
+ * This project contains a program that allows users to create puzzle game maps 
+ * and save their content.
+ */
+
+namespace ALozanoQGame
 {
     partial class GameForm
     {
@@ -68,7 +76,7 @@
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
             this.fileToolStripMenuItem.Text = "File";
-            this.fileToolStripMenuItem.Click += new System.EventHandler(this.fileToolStripMenuItem_Click);
+            //this.fileToolStripMenuItem.Click += new System.EventHandler(this.fileToolStripMenuItem_Click);
             // 
             // loadToolStripMenuItem
             // 

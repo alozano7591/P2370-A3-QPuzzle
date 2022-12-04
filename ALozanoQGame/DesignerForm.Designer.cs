@@ -1,5 +1,15 @@
-﻿namespace ALozanoQGame
+﻿/* Alfredo Lozano
+ * 5397591
+ * alozano7591@conestogac.on.ca
+ * Assignment 3: QGame:
+ * This project contains a program that allows users to create puzzle game maps 
+ * and save their content.
+ */
+
+namespace ALozanoQGame
 {
+
+
     partial class DesignerForm
     {
         /// <summary>

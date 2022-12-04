@@ -1,4 +1,12 @@
-﻿using System;
+﻿/* Alfredo Lozano
+ * 5397591
+ * alozano7591@conestogac.on.ca
+ * Assignment 2: QGame:
+ * This project contains a program that allows users to create puzzle game maps 
+ * and save their content.
+ */
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;

@@ -128,28 +128,39 @@ namespace ALozanoQGame
                                     //if our tile is not nothing, then make a block
                                     if (tileType > 0)
                                     {
+
                                         GridBlock block = new GridBlock(this, BLOCK_SIZE, rowTracker, colTracker, tileType);
+
+                                        //Check if the type is valid and will produce a proper tile, if not still make but warn player
+                                        if(!block.CheckIfTileTypeValid(tileType))
+                                        {
+                                            MessageBox.Show($"Warning: Tile type '{tileType}' is not a valid tile type. \n" +
+                                                $"This will result in the tile been created with no valid value. \n" +
+                                                $"This may seriously affect gameplay, perhaps make a new level file.", messageBoxTitle);
+                                        }
 
                                         tileBlocks[rowTracker, colTracker] = block;
 
                                         block.Left = START_X + (BLOCK_SIZE * colTracker);
                                         block.Top = START_Y + (BLOCK_SIZE * rowTracker);
 
-
                                         //this.Controls.Add(block);
                                         pnlTiles.Controls.Add(block);
 
-                                        //if the gridblock that we're adding is a box, then add to event handler
-                                        if (tileType == 4 || tileType == 5)
+                                        if (block.GetBlockType() == GridBlock.GridBlockType.RedBox || 
+                                            block.GetBlockType() == GridBlock.GridBlockType.GreenBox)
                                         {
                                             block.Click += new EventHandler(box_Click);
                                             remiainingBoxNum++;
                                             tbRemainingBoxes.Text = remiainingBoxNum.ToString();
                                         }
+
                                     }
 
+                                    //increment our column
                                     colTracker++;
 
+                                    //once we reach our limit restart our column and go to next row
                                     if (colTracker >= colNum)
                                     {
 
@@ -169,6 +180,8 @@ namespace ALozanoQGame
                         Console.WriteLine(ln);
                         counter++;
                     }
+
+                    //close the file and stop reading
                     file.Close();
                     Console.WriteLine($"File has {counter} lines.");
                 }
@@ -308,7 +321,7 @@ namespace ALozanoQGame
                     else
                     {
 
-                        if (nextBlock.GetBlockTypeNumber() == (selectedBlock.GetBlockTypeNumber() - 2))
+                        if (selectedBlock.CheckIfOtherTileIsMatch(nextBlock))
                         {
                             MessageBox.Show("We have a match", messageBoxTitle);
                             moved = true;
@@ -340,9 +353,9 @@ namespace ALozanoQGame
                     else
                     {
 
-                        if (nextBlock.GetBlockTypeNumber() == (selectedBlock.GetBlockTypeNumber() - 2))
+                        if (selectedBlock.CheckIfOtherTileIsMatch(nextBlock))
                         {
-                            InitiateBoxMatchAction(selectedBlock, nextBlock);
+                            MessageBox.Show("We have a match", messageBoxTitle);
                             moved = true;
                         }
 
@@ -411,12 +424,18 @@ namespace ALozanoQGame
 
             GridBlock gridBlock = sender as GridBlock;
 
-            //if the block type is box type
-            if(gridBlock.GetBlockTypeNumber() == 4 || gridBlock.GetBlockTypeNumber() == 5)
+            //if the block selected is a box type then make it our new selected box
+            if (gridBlock.GetBlockType() == GridBlock.GridBlockType.RedBox || gridBlock.GetBlockType() == GridBlock.GridBlockType.GreenBox)
             {
+                //if we have a selected box already then revert its border style back to normal
+                if(selectedBlock != null)
+                {
+                    selectedBlock.BorderStyle = BorderStyle.FixedSingle;
+                }
 
+                //make this box our current selected box and update its border
                 selectedBlock = gridBlock;
-
+                selectedBlock.BorderStyle = BorderStyle.Fixed3D;
             }
         }
 

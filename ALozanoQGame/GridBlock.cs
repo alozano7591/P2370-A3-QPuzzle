@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Net.Mime.MediaTypeNames;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace ALozanoQGame
 {
@@ -28,7 +29,13 @@ namespace ALozanoQGame
         //Added an enum for keeping track of block types
         //enums aren't significantly more useful right now than ints, but I placed them in preperation for the next assignment
         //which I assume these will be much more usefull for
-        public enum GridBlockType { None, Wall, RedDoor, GreenDoor, RedBox, GreenBox};
+        public enum GridBlockType { 
+            None = 0, 
+            Wall = 1, 
+            RedDoor = 2, 
+            GreenDoor = 3, 
+            RedBox = 6, 
+            GreenBox = 7};
 
         //the enum for this specific block
         private GridBlockType blockType = GridBlockType.None;
@@ -96,9 +103,6 @@ namespace ALozanoQGame
             this.SizeMode = PictureBoxSizeMode.StretchImage;
         }
 
-
-
-
         /// <summary>
         /// Sets the block type by changing the image and setting it to a new enum using the given int.
         /// Available for custom setting of images
@@ -155,6 +159,61 @@ namespace ALozanoQGame
         public int GetBlockTypeNumber()
         {
             return (int)blockType;
+        }
+
+        /// <summary>
+        /// Returns the block type.
+        /// </summary>
+        /// <returns></returns>
+        public GridBlockType GetBlockType()
+        {
+            return blockType;
+        }
+
+        /// <summary>
+        /// Use this to check if an inputed tile type is valid
+        /// </summary>
+        /// <param name="tileNum"></param>
+        /// <returns></returns>
+        public bool CheckIfTileTypeValid(int tileNum)
+        {
+
+            //get the values in our enum and convert to int array for comparison
+            int[] tileValues = (int[])Enum.GetValues(typeof(GridBlockType));
+
+            for (int i = 0; i < tileValues.Length; i++)
+            {
+
+                if(tileNum == tileValues[i])
+                    return true;
+
+            }
+
+            //if we got this far then there is no match, therefore type not valid
+            return false;
+        }
+
+
+        /// <summary>
+        /// Use this when the tile is a box. It will tell you if the other box is a match
+        /// </summary>
+        /// <param name="otherBlock">The block we compare this block to</param>
+        /// <returns></returns>
+        public bool CheckIfOtherTileIsMatch(GridBlock otherBlock)
+        {
+
+            //Check if we have a box with a color that matches the otherBlock
+            if (blockType == GridBlockType.RedBox && otherBlock.GetBlockType() == GridBlockType.RedDoor
+                ||
+                blockType == GridBlockType.GreenBox && otherBlock.GetBlockType() == GridBlockType.GreenDoor)
+            {
+
+                return true;
+
+            }
+
+            //we do not match
+            return false;
         }
 
     }

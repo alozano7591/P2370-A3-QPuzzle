@@ -47,7 +47,7 @@ namespace ALozanoQGame
         private GridBlock selectedBlock;                                //track our selected box
 
         private int movesNum = 0;                                       //track the numeber of moves
-        private int remiainingBoxNum = 0;                               //track the remaining number of boxes
+        private int remainingBoxNum = 0;                               //track the remaining number of boxes
 
         /// <summary>
         /// Upon creating of the form initialize the component
@@ -151,8 +151,8 @@ namespace ALozanoQGame
                                             block.GetBlockType() == GridBlock.GridBlockType.GreenBox)
                                         {
                                             block.Click += new EventHandler(box_Click);
-                                            remiainingBoxNum++;
-                                            tbRemainingBoxes.Text = remiainingBoxNum.ToString();
+                                            remainingBoxNum++;
+                                            tbRemainingBoxes.Text = remainingBoxNum.ToString();
                                         }
 
                                     }
@@ -204,6 +204,7 @@ namespace ALozanoQGame
                 case DialogResult.None:
                     break;
                 case DialogResult.OK:
+                    ResetGame();
                     LoadFile(dlgOpen.FileName);
                     break;
                 case DialogResult.Cancel:
@@ -274,7 +275,7 @@ namespace ALozanoQGame
             }
 
             //if the player has no boxes left, then they have won
-            if(remiainingBoxNum <=0)
+            if(remainingBoxNum <= 0)
             {
                 MessageBox.Show(
                     "You Win! \n" +
@@ -325,6 +326,7 @@ namespace ALozanoQGame
                         {
                             MessageBox.Show("We have a match", messageBoxTitle);
                             moved = true;
+                            BoxMatchAction(selectedBlock);
                         }
 
                         tileClear = false;
@@ -357,6 +359,7 @@ namespace ALozanoQGame
                         {
                             MessageBox.Show("We have a match", messageBoxTitle);
                             moved = true;
+                            BoxMatchAction(selectedBlock);
                         }
 
                         tileClear = false;
@@ -370,6 +373,23 @@ namespace ALozanoQGame
                 movesNum++;
                 tbMovesNumber.Text = movesNum.ToString();
             }
+
+        }
+
+        /// <summary>
+        /// Called when a match is detected. This will remove the box from the game 
+        /// and update our remaining box count.
+        /// </summary>
+        /// <param name="box">The box that found a matching door</param>
+        private void BoxMatchAction(GridBlock box)
+        {
+
+            //remove the box from our panel and update info
+            pnlTiles.Controls.Remove(box);
+            selectedBlock = null;
+            box.Dispose();
+            remainingBoxNum--;
+            tbRemainingBoxes.Text = remainingBoxNum.ToString();
 
         }
 
@@ -404,8 +424,8 @@ namespace ALozanoQGame
                     {
                         //this.Controls.Remove(box);
                         pnlTiles.Controls.Remove(box);
-                        remiainingBoxNum--;
-                        tbRemainingBoxes.Text = remiainingBoxNum.ToString();
+                        remainingBoxNum--;
+                        tbRemainingBoxes.Text = remainingBoxNum.ToString();
                     }
                     
                 }
@@ -444,25 +464,26 @@ namespace ALozanoQGame
         /// </summary>
         private void ResetGame()
         {
+            if (tileBlocks == null)
+                return;
 
             for (int i = 0; i < tileBlocks.GetLength(0); i++)
             {
                 for (int j = 0; j < tileBlocks.GetLength(1); j++)
                 {
 
-
                     pnlTiles.Controls.Remove(tileBlocks[i,j]);
-                    remiainingBoxNum--;
-                    tbRemainingBoxes.Text = remiainingBoxNum.ToString();
+                    remainingBoxNum--;
+                    tbRemainingBoxes.Text = remainingBoxNum.ToString();
 
                 }
             }
 
             movesNum = 0;
-            remiainingBoxNum = 0;
+            remainingBoxNum = 0;
 
             tbMovesNumber.Text = movesNum.ToString();
-            tbRemainingBoxes.Text = remiainingBoxNum.ToString();
+            tbRemainingBoxes.Text = remainingBoxNum.ToString();
 
         }
     }

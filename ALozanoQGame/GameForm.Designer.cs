@@ -76,7 +76,6 @@ namespace ALozanoQGame
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
             this.fileToolStripMenuItem.Text = "File";
-            //this.fileToolStripMenuItem.Click += new System.EventHandler(this.fileToolStripMenuItem_Click);
             // 
             // loadToolStripMenuItem
             // 
@@ -90,6 +89,7 @@ namespace ALozanoQGame
             this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
             this.quitToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.quitToolStripMenuItem.Text = "Quit";
+            this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
             // 
             // dlgOpen
             // 
@@ -111,7 +111,7 @@ namespace ALozanoQGame
             this.pnlTiles.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.pnlTiles.Controls.Add(this.pbPostionRef);
             this.pnlTiles.Location = new System.Drawing.Point(16, 48);
-            this.pnlTiles.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pnlTiles.Margin = new System.Windows.Forms.Padding(4);
             this.pnlTiles.Name = "pnlTiles";
             this.pnlTiles.Size = new System.Drawing.Size(663, 474);
             this.pnlTiles.TabIndex = 4;
@@ -140,7 +140,7 @@ namespace ALozanoQGame
             // 
             this.tbMovesNumber.Enabled = false;
             this.tbMovesNumber.Location = new System.Drawing.Point(735, 71);
-            this.tbMovesNumber.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbMovesNumber.Margin = new System.Windows.Forms.Padding(4);
             this.tbMovesNumber.Name = "tbMovesNumber";
             this.tbMovesNumber.Size = new System.Drawing.Size(132, 22);
             this.tbMovesNumber.TabIndex = 7;
@@ -149,7 +149,7 @@ namespace ALozanoQGame
             // 
             this.tbRemainingBoxes.Enabled = false;
             this.tbRemainingBoxes.Location = new System.Drawing.Point(735, 146);
-            this.tbRemainingBoxes.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbRemainingBoxes.Margin = new System.Windows.Forms.Padding(4);
             this.tbRemainingBoxes.Name = "tbRemainingBoxes";
             this.tbRemainingBoxes.Size = new System.Drawing.Size(132, 22);
             this.tbRemainingBoxes.TabIndex = 8;
@@ -157,7 +157,7 @@ namespace ALozanoQGame
             // btnUp
             // 
             this.btnUp.Location = new System.Drawing.Point(784, 330);
-            this.btnUp.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnUp.Margin = new System.Windows.Forms.Padding(4);
             this.btnUp.Name = "btnUp";
             this.btnUp.Size = new System.Drawing.Size(73, 58);
             this.btnUp.TabIndex = 9;
@@ -168,7 +168,7 @@ namespace ALozanoQGame
             // btnDown
             // 
             this.btnDown.Location = new System.Drawing.Point(784, 395);
-            this.btnDown.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnDown.Margin = new System.Windows.Forms.Padding(4);
             this.btnDown.Name = "btnDown";
             this.btnDown.Size = new System.Drawing.Size(73, 58);
             this.btnDown.TabIndex = 10;
@@ -179,7 +179,7 @@ namespace ALozanoQGame
             // btnRight
             // 
             this.btnRight.Location = new System.Drawing.Point(865, 395);
-            this.btnRight.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnRight.Margin = new System.Windows.Forms.Padding(4);
             this.btnRight.Name = "btnRight";
             this.btnRight.Size = new System.Drawing.Size(73, 58);
             this.btnRight.TabIndex = 11;
@@ -190,7 +190,7 @@ namespace ALozanoQGame
             // btnLeft
             // 
             this.btnLeft.Location = new System.Drawing.Point(703, 395);
-            this.btnLeft.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnLeft.Margin = new System.Windows.Forms.Padding(4);
             this.btnLeft.Name = "btnLeft";
             this.btnLeft.Size = new System.Drawing.Size(73, 58);
             this.btnLeft.TabIndex = 12;

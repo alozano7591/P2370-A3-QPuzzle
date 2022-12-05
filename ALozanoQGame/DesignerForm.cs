@@ -5,6 +5,7 @@
  *      Alfredo Lozano, 2022.11.05: Get/Set for enum type, tracks and counts box types
  */
 
+using ALozanoQGame.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -34,11 +35,17 @@ namespace ALozanoQGame
 
         public const string MSG_BOX_CAPTION = "Al's QGame";
 
-        //list that stores the images that will be used for grid boxes
-        private List<Bitmap> blockImages = new List<Bitmap>();
+        //variables used for holding our box images
+        private Bitmap wallImage;
+        private Bitmap redDoorImage;
+        private Bitmap greenDoorImage;
+        private Bitmap redBoxImage;
+        private Bitmap greenBoxImage;
 
-        //selected image index. This will determine what images the selected gird boxes turn into
-        private int activeIMGIndex = 0;
+        //keeps track of which image is going to be set onto blocks
+        private Bitmap activeImage;
+        //keeps track of block type of activeImage
+        private GridBlock.GridBlockType activeBlockType = GridBlock.GridBlockType.None;
 
         //Keeps track of our rows and columns
         private int Rows { get; set; }
@@ -50,6 +57,9 @@ namespace ALozanoQGame
 
         private string supportedFileTypes = "QGame file|*.qgame|Text File|*.txt|All files|*.*";
 
+        /// <summary>
+        /// Form constructor, initializes components
+        /// </summary>
         public DesignerForm()
         {
 
@@ -153,31 +163,38 @@ namespace ALozanoQGame
             //save a reference to the button that we have just pressed
             Button btnTool = sender as Button;
 
-            //set the active image index based on the button we just pressed
-            if(btnTool == btnNone)
+            //find out which image and boxtype top associate
+            if (btnTool == btnNone)
             {
-                activeIMGIndex = 0;
+                activeImage = null;
+                activeBlockType = GridBlock.GridBlockType.None;
             }
-            else if(btnTool == btnWall)
+            else if (btnTool == btnWall)
             {
-                activeIMGIndex = 1;
+                activeImage = wallImage;
+                activeBlockType = GridBlock.GridBlockType.Wall;
             }
-            else if(btnTool == btnRedDoor)
+            else if (btnTool == btnRedDoor)
             {
-                activeIMGIndex = 2;
+                activeImage = redDoorImage;
+                activeBlockType = GridBlock.GridBlockType.RedDoor;
             }
-            else if( btnTool == btnGreenDoor)
+            else if (btnTool == btnGreenDoor)
             {
-                activeIMGIndex = 3;
+                activeImage = greenDoorImage;
+                activeBlockType = GridBlock.GridBlockType.GreenDoor;
             }
-            else if(btnTool == btnRedBox)
+            else if (btnTool == btnRedBox)
             {
-                activeIMGIndex = 4;
+                activeImage = redBoxImage;
+                activeBlockType = GridBlock.GridBlockType.RedBox;
             }
             else if (btnTool == btnGreenBox)
             {
-                activeIMGIndex = 5;
+                activeImage = greenBoxImage;
+                activeBlockType = GridBlock.GridBlockType.GreenBox;
             }
+
 
         }
 
@@ -191,7 +208,8 @@ namespace ALozanoQGame
 
             GridBlock gridBlock = sender as GridBlock;
 
-            gridBlock.SetBlockType(blockImages[activeIMGIndex], activeIMGIndex);
+            //gridBlock.SetBlockType(blockImages[activeIMGIndex], activeIMGIndex);
+            gridBlock.SetBlockType(activeImage, (int)activeBlockType);
 
         }
 
@@ -232,15 +250,17 @@ namespace ALozanoQGame
                             //loop through list of girdblocks and return the number of each type (walls, doors, boxes)
                             for (int i = 0; i < gridBlocks.Count; i++)
                             {
-                                if (gridBlocks[i].GetBlockTypeNumber() == 1)
+                                if (gridBlocks[i].GetBlockType() == GridBlock.GridBlockType.Wall)
                                 {
                                     numOfWalls++;
                                 }
-                                else if (gridBlocks[i].GetBlockTypeNumber() == 2 || gridBlocks[i].GetBlockTypeNumber() == 3)
+                                else if (gridBlocks[i].GetBlockType() == GridBlock.GridBlockType.RedDoor || 
+                                    gridBlocks[i].GetBlockType() == GridBlock.GridBlockType.GreenDoor)
                                 {
                                     numOfDoors++;
                                 }
-                                else if (gridBlocks[i].GetBlockTypeNumber() == 4 || gridBlocks[i].GetBlockTypeNumber() == 5)
+                                else if (gridBlocks[i].GetBlockType() == GridBlock.GridBlockType.RedBox ||
+                                    gridBlocks[i].GetBlockType() == GridBlock.GridBlockType.GreenBox)
                                 {
                                     numOfBoxes++;
                                 }
@@ -318,13 +338,12 @@ namespace ALozanoQGame
         private void DesignerForm_Load(object sender, EventArgs e)
         {
             
-            //add images to the list for our grid images
-            blockImages.Add(null);
-            blockImages.Add(Properties.Resources.WallBlock);
-            blockImages.Add(Properties.Resources.RedDoor);
-            blockImages.Add(Properties.Resources.GreenDoor);
-            blockImages.Add(Properties.Resources.RedBox);
-            blockImages.Add(Properties.Resources.GreenBox);
+            //save our images to variables. Saved to array before but that ended up forcing me to use magic numbers
+            wallImage   = Properties.Resources.WallBlock;
+            redDoorImage = Properties.Resources.RedDoor;
+            greenDoorImage = Properties.Resources.GreenDoor;
+            redBoxImage = Properties.Resources.RedBox;
+            greenBoxImage = Properties.Resources.GreenBox;
 
             //add our resourced images to our ImageList, this will allow for use of images in buttons with custom sizing
             imageListTools.Images.Add(Properties.Resources.None);

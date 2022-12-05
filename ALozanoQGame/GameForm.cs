@@ -27,7 +27,7 @@ namespace ALozanoQGame
     {
 
         //this will be on the title of all message boxes
-        private string messageBoxTitle = "Al's QGame";
+        private const string MSG_BOX_CAPTION = "Al's QGame";
 
         //The starting x position of the grid
         public const int START_X = 40;
@@ -136,7 +136,7 @@ namespace ALozanoQGame
                                         {
                                             MessageBox.Show($"Warning: Tile type '{tileType}' is not a valid tile type. \n" +
                                                 $"This will result in the tile been created with no valid value. \n" +
-                                                $"This may seriously affect gameplay, perhaps make a new level file.", messageBoxTitle);
+                                                $"This may seriously affect gameplay, perhaps make a new level file.", MSG_BOX_CAPTION);
                                         }
 
                                         tileBlocks[rowTracker, colTracker] = block;
@@ -195,33 +195,45 @@ namespace ALozanoQGame
         /// <param name="e">the arguments</param>
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            dlgOpen.Filter = "game file|*.qgame|Text File|*.txt|all files|*.*";
 
-            DialogResult r = dlgOpen.ShowDialog();
-
-            switch (r)
+            try
             {
-                case DialogResult.None:
-                    break;
-                case DialogResult.OK:
-                    ResetGame();
-                    LoadFile(dlgOpen.FileName);
-                    break;
-                case DialogResult.Cancel:
-                    break;
-                case DialogResult.Abort:
-                    break;
-                case DialogResult.Retry:
-                    break;
-                case DialogResult.Ignore:
-                    break;
-                case DialogResult.Yes:
-                    break;
-                case DialogResult.No:
-                    break;
-                default:
-                    break;
+
+                dlgOpen.Filter = "game file|*.qgame|Text File|*.txt|all files|*.*";
+
+                DialogResult r = dlgOpen.ShowDialog();
+
+                switch (r)
+                {
+                    case DialogResult.None:
+                        break;
+                    case DialogResult.OK:
+                        ResetGame();
+                        LoadFile(dlgOpen.FileName);
+                        break;
+                    case DialogResult.Cancel:
+                        break;
+                    case DialogResult.Abort:
+                        break;
+                    case DialogResult.Retry:
+                        break;
+                    case DialogResult.Ignore:
+                        break;
+                    case DialogResult.Yes:
+                        break;
+                    case DialogResult.No:
+                        break;
+                    default:
+                        break;
+                }
             }
+            catch (Exception ex)
+            {
+                //all other exceptions show this message
+                MessageBox.Show(ex.Message, MSG_BOX_CAPTION);
+
+            }
+
         }
 
         /// <summary>
@@ -248,40 +260,48 @@ namespace ALozanoQGame
         /// <param name="e"></param>
         private void buttonMove_Click(object sender, EventArgs e)
         {
+            try
+            {
+                if (selectedBlock == null)
+                {
+                    MessageBox.Show("No box selected", MSG_BOX_CAPTION);
+                    return;
+                }
 
-            if (selectedBlock == null)
-            {
-                MessageBox.Show("No box selected", messageBoxTitle);
-                return;
-            }
+                Button btnDir = sender as Button;
 
-            Button btnDir = sender as Button;
+                if (btnDir.Name == "btnLeft")
+                {
+                    MoveBox(-1, 0);
+                }
+                else if (btnDir.Name == "btnRight")
+                {
+                    MoveBox(1, 0);
+                }
+                else if (btnDir.Name == "btnUp")
+                {
+                    MoveBox(0, -1);
+                }
+                else if (btnDir.Name == "btnDown")
+                {
+                    MoveBox(0, 1);
+                }
 
-            if (btnDir.Name == "btnLeft")
-            {
-                MoveBox(-1, 0);
+                //if the player has no boxes left, then they have won
+                if (remainingBoxNum <= 0)
+                {
+                    MessageBox.Show(
+                        "You Win! \n" +
+                        "Total Moves: " + movesNum,
+                        MSG_BOX_CAPTION);
+                    ResetGame();
+                }
             }
-            else if (btnDir.Name == "btnRight")
+            catch (Exception ex)
             {
-                MoveBox(1, 0);
-            }
-            else if (btnDir.Name == "btnUp")
-            {
-                MoveBox(0, -1);
-            }
-            else if (btnDir.Name == "btnDown")
-            {
-                MoveBox(0, 1);
-            }
+                //all other exceptions show this message
+                MessageBox.Show(ex.Message, MSG_BOX_CAPTION);
 
-            //if the player has no boxes left, then they have won
-            if(remainingBoxNum <= 0)
-            {
-                MessageBox.Show(
-                    "You Win! \n" +
-                    "Total Moves: " + movesNum, 
-                    messageBoxTitle);
-                ResetGame();
             }
 
         }
@@ -324,7 +344,7 @@ namespace ALozanoQGame
 
                         if (selectedBlock.CheckIfOtherTileIsMatch(nextBlock))
                         {
-                            MessageBox.Show("We have a match", messageBoxTitle);
+                            MessageBox.Show("We have a match", MSG_BOX_CAPTION);
                             moved = true;
                             BoxMatchAction(selectedBlock);
                         }
@@ -357,7 +377,7 @@ namespace ALozanoQGame
 
                         if (selectedBlock.CheckIfOtherTileIsMatch(nextBlock))
                         {
-                            MessageBox.Show("We have a match", messageBoxTitle);
+                            MessageBox.Show("We have a match", MSG_BOX_CAPTION);
                             moved = true;
                             BoxMatchAction(selectedBlock);
                         }
@@ -387,6 +407,18 @@ namespace ALozanoQGame
             //remove the box from our panel and update info
             pnlTiles.Controls.Remove(box);
             selectedBlock = null;
+            
+            for(int i = 0; i < tileBlocks.GetLength(0); i++)
+            {
+                for(int j = 0; j < tileBlocks.GetLength(1); j++)
+                {
+                    if (tileBlocks[i,j] == box)
+                    {
+                        tileBlocks[i, j] = null;
+                    }
+                }
+            }
+
             box.Dispose();
             remainingBoxNum--;
             tbRemainingBoxes.Text = remainingBoxNum.ToString();
@@ -414,7 +446,7 @@ namespace ALozanoQGame
         /// <param name="door">the door that it hit</param>
         private void InitiateBoxMatchAction(GridBlock box, GridBlock door)
         {
-            MessageBox.Show("We have a match", messageBoxTitle);
+            MessageBox.Show("We have a match", MSG_BOX_CAPTION);
 
             for(int i =0; i < tileBlocks.GetLength(0); i++)
             {
@@ -485,6 +517,11 @@ namespace ALozanoQGame
             tbMovesNumber.Text = movesNum.ToString();
             tbRemainingBoxes.Text = remainingBoxNum.ToString();
 
+        }
+
+        private void quitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }
